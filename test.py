@@ -22,7 +22,7 @@ def preprocess(frame):
 env = wrap_env(gym.make("MsPacman-v4"))
 state_size = (88, 80, 1)
 action_size = env.action_space.n
-agent = DQN_Agent(state_size, action_size, 4)
+agent = Agent(state_size, action_size, 4)
 # agent.load("")
 
 state = preprocess(env.reset())
