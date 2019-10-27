@@ -95,6 +95,8 @@ class Agent:
         batch = batch_prioritized + batch_uniform
         
         batch = [e for (_, _, e) in batch]
+        states = []
+        targets = []
         
         for state, action, reward, next_state, done in batch:
             
@@ -109,7 +111,10 @@ class Agent:
             c_s = np.expand_dims(state.reshape(88, 80, 1), axis=0)
             target_f = self.model.predict(c_s)
             target_f[0][int(action)] = target
-            self.model.fit(c_s, target_f, epochs=1, verbose=0)
+            states.append(state)
+            targets.append(target_f.reshape(self.action_size))
+            
+        self.model.fit(np.array(states), np.array(targets), batch_size=batch_size, epochs=1, verbose=0)
             
         if self.epsilon > self.epsilon_min:
             self.epsilon *= self.epsilon_decay
